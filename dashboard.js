@@ -1,4 +1,4 @@
-const apiEndpoint = 'https://2wc34iye0j.execute-api.eu-north-1.amazonaws.com/newstage/getsensordata'; // Replace with your API Gateway URL
+const apiEndpoint = 'https://2wc34iye0j.execute-api.eu-north-1.amazonaws.com/newstage/getsensordata'; 
 
 async function fetchSensorData() {
   try {
@@ -114,20 +114,4 @@ function renderGasChart(timestamps, gasLevels) {
 // Fetch and display data
 fetchSensorData();
 
-document.getElementById('rotateServoBtn').addEventListener('click', () => {
-  const mqttEndpoint = 'a2cwkf2smvixie-ats.iot.eu-north-1.amazonaws.com/mqtt' ; // Replace with your IoT MQTT WebSocket endpoint
 
-  // Initialize MQTT connection and publish message
-  const client = new Paho.MQTT.Client(mqttEndpoint, 'WebClient-01-id');
-  client.connect({
-    onSuccess: () => {
-      const message = new Paho.MQTT.Message('rotate');
-      message.destinationName = 'servo/control';
-      client.send(message);
-      alert('Servo command sent successfully!');
-    },
-    onFailure: () => {
-      alert('Failed to send servo command');
-    }
-  });
-});

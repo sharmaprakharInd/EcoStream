@@ -1,0 +1,195 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>ECOSTREAM - Firebase Data Plots</title>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-database-compat.js"></script>
+    <style>
+        body {
+            font-family: sans-serif;
+            margin: 0;
+            padding: 0;
+        }
+
+        .nav-bar {
+            background-color: #333;
+            color: white;
+            padding: 15px;
+            text-align: center;
+        }
+
+        .chart-container {
+            width: 50%;
+            height: 400px;
+            box-sizing: border-box;
+            border: 2px solid #ccc; /* Add border */
+            border-radius: 5px; /* Add rounded corners */
+        }
+
+        .chart-wrapper {
+            display: flex;
+            justify-content: space-around;
+        }
+
+        .average-data {
+            text-align: center;
+            margin-top: 10px;
+        }
+    </style>
+</head>
+<body>
+    <div class="nav-bar">
+        <h1>ECOSTREAM</h1>
+    </div>
+
+    <div class="chart-wrapper">
+        <div class="chart-container">
+            <canvas id="temperatureChart"></canvas>
+        </div>
+        <div class="chart-container">
+            <canvas id="humidityChart"></canvas>
+        </div>
+    </div>
+
+    <div class="average-data">
+        <p>Average Temperature (Last 10 Readings): <span id="avgTemp"></span> °C</p>
+        <p>Average Humidity (Last 10 Readings): <span id="avgHumid"></span> %</p>
+    </div>
+
+    <script>
+        // Replace with your Firebase configuration
+        const firebaseConfig = {
+            databaseURL: "https://irrigreat-9ab11-default-rtdb.firebaseio.com"
+        };
+
+        // Initialize Firebase
+        const app = firebase.initializeApp(firebaseConfig);
+        const database = firebase.database();
+
+        // Reference to your data node
+        const dataRef = database.ref("DHT_11");
+
+        // Arrays to store data points
+        const timestamps =[];
+        const temperatures =[];
+        const humidities =[];
+
+        // Temperature Chart setup
+        const tempCtx = document.getElementById('temperatureChart').getContext('2d');
+        const temperatureChart = new Chart(tempCtx, {
+            type: 'line',
+            data: {
+                labels: timestamps,
+                datasets: [{
+                    label: 'Temperature (°C)',
+                    data: temperatures,
+                    borderColor: 'red',
+                    fill: false
+                }]
+            },
+            options: {
+                scales: {
+                    x: {
+                        title: {
+                            display: true,
+                            text: 'Time'
+                        }
+                    },
+                    y: {
+                        title: {
+                            display: true,
+                            text: 'Temperature (°C)'
+                        }
+                    }
+                }
+            }
+        });
+
+        // Humidity Chart setup
+        const humidityCtx = document.getElementById('humidityChart').getContext('2d');
+        const humidityChart = new Chart(humidityCtx, {
+            type: 'line',
+            data: {
+                labels: timestamps,
+                datasets: [{
+                    label: 'Humidity (%)',
+                    data: humidities,
+                    borderColor: 'blue',
+                    fill: false
+                }]
+            },
+            options: {
+                scales: {
+                    x: {
+                        title: {
+                            display: true,
+                            text: 'Time'
+                        }
+                    },
+                    y: {
+                        title: {
+                            display: true,
+                            text: 'Humidity (%)'
+                        }
+                    }
+                }
+            }
+        });
+
+        // Function to calculate average of the last 'n' values
+        function calculateAverage(arr, n) {
+            if (arr.length === 0) return 0;
+            const start = Math.max(0, arr.length - n);
+            const end = arr.length;
+            const subset = arr.slice(start, end);
+            const sum = subset.reduce((a, b) => a + b, 0);
+            return sum / subset.length;
+        }
+
+        // Listen for data changes
+        dataRef.on('value', (snapshot) => {
+            const data = snapshot.val();
+            timestamps.length = 0;
+            temperatures.length = 0;
+            humidities.length = 0;
+
+            const dataArray =[]; // Temporary array to hold data for sorting
+
+            for (const key in data) {
+                if (data.hasOwnProperty(key)) {
+                    const entry = data[key];
+                    if (entry && entry.Time && entry.Temperature && entry.Humidity) {
+                        dataArray.push(entry);
+                    }
+                }
+            }
+
+            // Sort data by Time (assuming Time is a string in "HH:MM:SS" format)
+            dataArray.sort((a, b) => a.Time.localeCompare(b.Time));
+
+            // Extract data after sorting
+            dataArray.forEach(entry => {
+                timestamps.push(entry.Time);
+                temperatures.push(entry.Temperature);
+                humidities.push(entry.Humidity);
+            });
+
+            // Update the charts
+            temperatureChart.data.labels = timestamps;
+            temperatureChart.data.datasets[0].data = temperatures;
+            temperatureChart.update();
+
+            humidityChart.data.labels = timestamps;
+            humidityChart.data.datasets[0].data = humidities;
+            humidityChart.update();
+
+            // Calculate and display averages
+            const avgTemp = calculateAverage(temperatures, 10);
+            const avgHumid = calculateAverage(humidities, 10);
+            document.getElementById('avgTemp').textContent = avgTemp.toFixed(2);
+            document.getElementById('avgHumid').textContent = avgHumid.toFixed(2);
+        });
+    </script>
+</body>
+</html>

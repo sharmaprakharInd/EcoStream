@@ -1,0 +1,148 @@
+/* General Body Styling */
+body {
+  font-family: Arial, sans-serif;
+  margin: 0;
+  padding: 0;
+  background-color: #f4f4f9;
+  color: #333;
+}
+
+/* Navbar Styling */
+nav {
+  background-color: #4CAF50;
+  color: white;
+  text-align: center;
+  padding: 15px;
+  font-size: 1.8em;
+}
+
+/* Main Container Styling */
+main {
+  padding: 20px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+/* Chart Container */
+.chart-container {
+  width: 90%;
+  background-color: white;
+  border: 1px solid #ddd;
+  border-radius: 8px;
+  padding: 15px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  margin: 20px 0;
+}
+
+.chart-container h2 {
+  font-size: 1.2em;
+  text-align: center;
+  margin-bottom: 10px;
+}
+
+canvas {
+  width: 100%;
+  height: auto;
+}
+
+/* Statistics Section */
+.statistics {
+  width: 90%;
+  background-color: white;
+  border: 1px solid #ddd;
+  border-radius: 8px;
+  padding: 15px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  text-align: center;
+  font-size: 1em;
+  margin: 20px 0;
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+  nav {
+    font-size: 1.5em;
+    padding: 10px;
+  }
+
+  .chart-container h2 {
+    font-size: 1em;
+  }
+
+  .chart-container {
+    width: 100%; /* Ensure charts fit perfectly on mobile screens */
+    padding: 10px;
+  }
+
+  canvas {
+    width: 100%;
+    height: auto;
+  }
+
+  .statistics {
+    width: 100%;
+    font-size: 0.9em;
+  }
+}
+
+@media (max-width: 480px) {
+  nav {
+    font-size: 1.2em;
+    padding: 8px;
+  }
+
+  .chart-container h2 {
+    font-size: 0.9em;
+  }
+
+  .chart-container {
+    padding: 8px;
+    margin: 10px 0;
+  }
+
+  canvas {
+    width: 100%;
+    height: auto;
+  }
+
+  .statistics {
+    padding: 10px;
+    font-size: 0.8em;
+  }
+}
+.control-panel {
+  width: 80%;
+  max-width: 800px;
+  margin: 20px auto;
+  text-align: center;
+  background-color: white;
+  border: 1px solid #ddd;
+  border-radius: 8px;
+  padding: 20px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+.control-panel h2 {
+  font-size: 1.3em;
+  margin-bottom: 15px;
+}
+
+button {
+  font-size: 1em;
+  padding: 10px 20px;
+  border: none;
+  border-radius: 4px;
+  background-color: #4CAF50;
+  color: white;
+  cursor: pointer;
+}
+
+button:hover {
+  background-color: #45a049;
+}
+
+button:active {
+  background-color: #3e8e41;
+  transform: scale(0.98);
+}

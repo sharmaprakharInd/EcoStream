@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Sensor Dashboard</title>
+  <link rel="stylesheet" href="styles.css">
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  <!-- <script src="https://cdnjs.cloudflare.com/ajax/libs/paho-mqtt/1.0.3/mqttws31.min.js"></script> -->
+  <script src="mqttws31.min.js"></script>
+  
+
+</head>
+<body>
+  <nav>
+    <h1>EcoStream Compost Monitoring Dashboard</h1>
+  </nav>
+
+  <main>
+    <section class="chart-container">
+      <h2>Temperature vs Time</h2>
+      <canvas id="temperatureChart"></canvas>
+    </section>
+
+    <section class="chart-container">
+      <h2>Humidity vs Time</h2>
+      <canvas id="humidityChart"></canvas>
+    </section>
+
+    <section class="chart-container">
+      <h2>Gas Level vs Time</h2>
+      <canvas id="gasChart"></canvas>
+    </section>
+
+    <section class="statistics">
+      <h2>Statistics</h2>
+      <p id="averages">Loading statistics...</p>
+    </section>
+    <section class="control-panel">
+      <h2>Control Panel</h2>
+      <button id="rotateServoBtn">Rotate Servo</button>
+    </section>
+  </main>
+  <script src="dashboard.js"></script>
+ 
+</body>
+</html>
